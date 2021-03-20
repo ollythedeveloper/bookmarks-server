@@ -9,8 +9,13 @@ const bodyParser = express.json()
 
 bookmarksRouter
     .route('/bookmarks')
-    .get((req, res) => {
-        res.json(bookmarks);
+    .get((req, res, next) => {
+        const knexInstance = req.app.get('db')
+        BookmarksService.getAllBookmarks(knexInstance)
+            .then(bookmarks => {
+                res.json(bookmarks)
+            })
+            .catch(next)
     })
     .post(bodyParser, (req, res) => {
         const { title, url, description='none', rating } = req.body;
