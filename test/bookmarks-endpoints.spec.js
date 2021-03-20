@@ -40,6 +40,17 @@ describe.only('Bookmarks Endpoints', function () {
         })
     })
 
+    describe(`GET /bookmarks`, () => {
+        context(`Given no bookmarks`, () => {
+            it(`responds with 200 and a empty list`, () => {
+                return supertest(app)
+                    .get('/bookmarks')
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .expect(200, [])
+            })
+        })
+    })
+
     describe(`GET /bookmarks/:bookmarks_id`, () => {
         context('Given there are bookmarks in the database', () => {
             const testBookmarks = makeBookmarksArray()
@@ -57,6 +68,18 @@ describe.only('Bookmarks Endpoints', function () {
                     .get(`/bookmarks/${bookmarkId}`)
                     .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                     .expect(200, expectedBookmark)
+            })
+        })
+    })
+
+    describe(`GET /bookmarks/:bookmarks_id`, () => {
+        context(`Given no bookmarks`, () => {
+            it(`responds with 404`, () => {
+                const bookmarkId = 123456
+                return supertest(app)
+                    .get(`/bookmarks/${bookmarkId}`)
+                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    .expect(404, { error: { message: `Bookmark Not Found` } })
             })
         })
     })
