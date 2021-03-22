@@ -13,7 +13,7 @@ const BookmarksService = {
             .into('bookmarks')
             .returning('*')
             .then(rows => {
-                return rows
+                return rows[0]
             })
     },
     deleteBookmark(knex, id) {
