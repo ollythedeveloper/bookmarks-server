@@ -26,16 +26,16 @@ bookmarksRouter
             .catch(next)
     })
     .post(bodyParser, (req, res, next) => {
-        const { title, url, description = 'none', rating } = req.body;
-        // const newBookmark = { title, url, description, rating }
+        for (const field of ['title', 'url', 'rating']) {
+            if (!req.body[field]) {
+                logger.error(`'${field}' is required`)
+                return res.status(400).send({
+                    error: { message: `'${field}' is required` }
+                })
+            }
+        }
 
-        // for (const [key, value] of Object.entries(newBookmark)) {
-        //     if (value == null) {
-        //         return res.status(400).json({
-        //             error: { message: `Missing '${key}' in request body` }
-        //         })
-        //     }
-        // }
+        const { title, url, description, rating } = req.body;
 
         const ratingNum = Number(rating)
 
@@ -46,10 +46,10 @@ bookmarksRouter
             })
         }
 
-        // if (!isWebURi(url)) {
-        //     logger.error(`Invlalid url '${url}' supplied `)
+        // if (!isWebUri(url)) {
+        //     logger.error(`Invalid url '${url}' supplied`)
         //     return res.status(400).send({
-        //         error: { message: `'url' must be a valid url`}
+        //       error: { message: `'url' must be a valid URL` }
         //     })
         // }
 
